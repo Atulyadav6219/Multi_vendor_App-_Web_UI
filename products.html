@@ -1,0 +1,556 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Products - MultiVendor</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background-color: #f5f5f5;
+            line-height: 1.6;
+        }
+
+        /* Navbar Styles */
+        .navbar {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            padding: 1rem 0;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+
+        .nav-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 0 2rem;
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            color: white;
+            font-size: 1.5rem;
+            font-weight: bold;
+            text-decoration: none;
+        }
+
+        .logo::before {
+            content: "📦";
+            margin-right: 0.5rem;
+            font-size: 1.8rem;
+        }
+
+        .nav-links {
+            display: flex;
+            list-style: none;
+            gap: 2rem;
+        }
+
+        .nav-links a {
+            color: white;
+            text-decoration: none;
+            font-weight: 500;
+            transition: opacity 0.3s;
+        }
+
+        .nav-links a:hover {
+            opacity: 0.8;
+        }
+
+        /* Main Content */
+        .main-content {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 2rem;
+            min-height: calc(100vh - 200px);
+        }
+
+        .page-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 2rem;
+        }
+
+        .page-title {
+            font-size: 2rem;
+            color: #333;
+            font-weight: 600;
+        }
+
+        .back-btn {
+            background: #667eea;
+            color: white;
+            padding: 0.5rem 1rem;
+            border: none;
+            border-radius: 5px;
+            text-decoration: none;
+            font-weight: 500;
+            transition: background-color 0.3s;
+        }
+
+        .back-btn:hover {
+            background: #5a6fd8;
+        }
+
+        /* Loading and Error States */
+        .loading, .no-products {
+            text-align: center;
+            padding: 3rem;
+            font-size: 1.1rem;
+            color: #666;
+        }
+
+        .loading {
+            display: block;
+        }
+
+        .no-products {
+            display: none;
+        }
+
+        /* Products Grid */
+        .products-container {
+            display: none;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 2rem;
+            margin-top: 2rem;
+        }
+
+        .product-card {
+            background: white;
+            border-radius: 12px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+            overflow: hidden;
+            transition: transform 0.3s, box-shadow 0.3s;
+        }
+
+        .product-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 8px 25px rgba(0,0,0,0.15);
+        }
+
+        .product-image {
+            height: 250px;
+            background: #f8f9fa;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            overflow: hidden;
+        }
+
+        .product-image img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            transition: transform 0.3s;
+        }
+
+        .product-card:hover .product-image img {
+            transform: scale(1.05);
+        }
+
+        .product-info {
+            padding: 1.5rem;
+        }
+
+        .product-name {
+            font-size: 1.2rem;
+            font-weight: 600;
+            color: #333;
+            margin-bottom: 0.5rem;
+        }
+
+        .product-price {
+            font-size: 1.4rem;
+            font-weight: bold;
+            color: #007bff;
+            margin-bottom: 0.75rem;
+        }
+
+        .product-description {
+            color: #666;
+            font-size: 0.9rem;
+            margin-bottom: 0.75rem;
+            line-height: 1.4;
+        }
+
+        .vendor-name {
+            color: #888;
+            font-size: 0.85rem;
+            margin-bottom: 1rem;
+        }
+
+        .add-to-cart-btn {
+            width: 100%;
+            background: #007bff;
+            color: white;
+            border: none;
+            padding: 0.75rem;
+            border-radius: 8px;
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+
+        .add-to-cart-btn:hover {
+            background: #0056b3;
+        }
+
+        /* Footer Styles */
+        .footer {
+            background: #2c3e50;
+            color: white;
+            padding: 3rem 0 1rem;
+        }
+
+        .footer-content {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 2rem;
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 2rem;
+        }
+
+        .footer-section h3 {
+            color: #3498db;
+            margin-bottom: 1rem;
+            font-size: 1.2rem;
+        }
+
+        .footer-section p {
+            color: #bdc3c7;
+            line-height: 1.6;
+            margin-bottom: 1rem;
+        }
+
+        .footer-section ul {
+            list-style: none;
+        }
+
+        .footer-section ul li {
+            margin-bottom: 0.5rem;
+        }
+
+        .footer-section ul li a {
+            color: #bdc3c7;
+            text-decoration: none;
+            transition: color 0.3s;
+        }
+
+        .footer-section ul li a:hover {
+            color: #3498db;
+        }
+
+        .social-icons {
+            display: flex;
+            gap: 1rem;
+            margin-top: 1rem;
+        }
+
+        .social-icon {
+            width: 40px;
+            height: 40px;
+            background: #3498db;
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            text-decoration: none;
+            transition: background-color 0.3s;
+        }
+
+        .social-icon:hover {
+            background: #2980b9;
+        }
+
+        .newsletter-form {
+            display: flex;
+            flex-direction: column;
+            gap: 1rem;
+            margin-top: 1rem;
+        }
+
+        .newsletter-input {
+            padding: 0.75rem;
+            border: none;
+            border-radius: 8px;
+            font-size: 1rem;
+        }
+
+        .newsletter-btn {
+            background: #3498db;
+            color: white;
+            padding: 0.75rem;
+            border: none;
+            border-radius: 8px;
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+
+        .newsletter-btn:hover {
+            background: #2980b9;
+        }
+
+        .footer-bottom {
+            text-align: center;
+            padding: 1rem 0;
+            border-top: 1px solid #34495e;
+            margin-top: 2rem;
+            color: #bdc3c7;
+        }
+
+        /* Responsive Design */
+        @media (max-width: 768px) {
+            .nav-container {
+                flex-direction: column;
+                gap: 1rem;
+                padding: 0 1rem;
+            }
+
+            .nav-links {
+                gap: 1rem;
+                flex-wrap: wrap;
+                justify-content: center;
+            }
+
+            .main-content {
+                padding: 1rem;
+            }
+
+            .page-header {
+                flex-direction: column;
+                gap: 1rem;
+                text-align: center;
+            }
+
+            .products-container {
+                grid-template-columns: 1fr;
+            }
+
+            .footer-content {
+                padding: 0 1rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Navbar -->
+     <nav class="navbar">
+        <div class="nav-container">
+            <a href="#" class="logo">
+                📦 MultiVendor
+            </a>
+            <ul class="nav-links">
+                <li><a href="Home.html">Home</a></li>
+                <li><a href="about.html">About</a></li>
+                <li><a href="categories.html">Categories</a></li>
+                <li><a href="admin-login.html">Admin Login</a></li>
+                <li><a href="user-login.html">User Login</a></li>
+            </ul>
+        </div>
+    </nav>
+
+    <!-- Main Content -->
+    <main class="main-content">
+        <div class="page-header">
+            <h1 id="categoryTitle" class="page-title">Products</h1>
+            <a href="categories.html" class="back-btn">Back to Categories</a>
+        </div>
+
+        <div id="loading" class="loading">Loading products...</div>
+        <div id="no-products" class="no-products">No products found in this category.</div>
+        <div id="products-container" class="products-container"></div>
+    </main>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="footer-content">
+            <div class="footer-section">
+                <h3>About Us</h3>
+                <p>MultiVendor Marketplace connects buyers and sellers worldwide, providing a secure and efficient platform for e-commerce.</p>
+                <div class="social-icons">
+                    <a href="#" class="social-icon">📘</a>
+                    <a href="#" class="social-icon">🐦</a>
+                    <a href="#" class="social-icon">📷</a>
+                    <a href="#" class="social-icon">📺</a>
+                </div>
+            </div>
+            
+            <div class="footer-section">
+                <h3>Quick Links</h3>
+                <ul>
+                    <li><a href="about.html">About</a></li>
+                    <li><a href="categories.html">Categories</a></li>
+                    <li><a href="support.html">Support</a></li>
+                    <li><a href="privacy.html">Privacy Policy</a></li>
+                    <li><a href="terms.html">Terms of Service</a></li>
+                </ul>
+            </div>
+            
+            <div class="footer-section">
+                <h3>Contact Info</h3>
+                <p>📧 info@multivendor.com</p>
+                <p>📞 +1 (555) 123-4567</p>
+                <p>📍 123 Business St, City, State 12345</p>
+            </div>
+            
+            <div class="footer-section">
+                <h3>Newsletter</h3>
+                <p>Subscribe to get updates on new products and offers.</p>
+                <div class="newsletter-form">
+                    <input type="email" class="newsletter-input" placeholder="Enter your email">
+                    <button class="newsletter-btn">Subscribe</button>
+                </div>
+            </div>
+        </div>
+        
+        <div class="footer-bottom">
+            <p>&copy; 2024 MultiVendor Marketplace. All rights reserved.</p>
+        </div>
+    </footer>
+
+    <script>
+        const apiUrl = "http://localhost:5116/api";
+
+        // Get category ID from URL parameters
+        function getCategoryId() {
+            const urlParams = new URLSearchParams(window.location.search);
+            return urlParams.get('category');
+        }
+
+        // Load products for specific category
+        async function loadProducts() {
+            const categoryId = getCategoryId();
+
+            if (!categoryId) {
+                document.getElementById('loading').innerHTML = 'No category specified.';
+                return;
+            }
+
+            try {
+                await loadCategoryDetails(categoryId);
+
+                const response = await fetch(`${apiUrl}/Product/category/${categoryId}`);
+
+                if (!response.ok) {
+                    throw new Error('Failed to load products');
+                }
+
+                const products = await response.json();
+                displayProducts(products);
+
+            } catch (error) {
+                console.error('Error loading products:', error);
+                document.getElementById('loading').innerHTML = 'Failed to load products. Please try again later.';
+            }
+        }
+
+        // Load category details to show category name
+        async function loadCategoryDetails(categoryId) {
+            try {
+                const response = await fetch(`${apiUrl}/category/${categoryId}`);
+                if (response.ok) {
+                    const category = await response.json();
+                    document.getElementById('categoryTitle').textContent = `${category.categoryName} Products`;
+                    document.title = `${category.categoryName} - MultiVendor`;
+                }
+            } catch (error) {
+                console.error('Error loading category details:', error);
+            }
+        }
+
+        // Display products
+        function displayProducts(products) {
+            const container = document.getElementById('products-container');
+            const loading = document.getElementById('loading');
+            const noProducts = document.getElementById('no-products');
+
+            loading.style.display = 'none';
+
+            if (!products || products.length === 0) {
+                noProducts.style.display = 'block';
+                return;
+            }
+
+            container.innerHTML = '';
+
+            products.forEach(product => {
+                const productCard = createProductCard(product);
+                container.appendChild(productCard);
+            });
+
+            container.style.display = 'grid';
+        }
+
+        // Create product card
+        function createProductCard(product) {
+            const card = document.createElement('div');
+            card.className = 'product-card';
+
+            const price = parseFloat(product.productPrice).toFixed(2);
+            const imageUrl = product.productImage && product.productImage.startsWith('data:image')
+                ? product.productImage
+                : (product.productImage || 'https://via.placeholder.com/300x200?text=No+Image');
+
+            card.innerHTML = `
+                <div class="product-image">
+                    <img src="${imageUrl}" alt="${product.productName}" onerror="this.src='https://via.placeholder.com/300x200?text=No+Image'">
+                </div>
+                <div class="product-info">
+                    <h3 class="product-name">${product.productName}</h3>
+                    <p class="product-price">₹${price}</p>
+                    <p class="product-description">${product.productDescription || 'No description available'}</p>
+                    <p class="vendor-name">Vendor: ${product.vendorName}</p>
+                    <button class="add-to-cart-btn" onclick="addToCart(${product.productId})">
+                        Add to Cart
+                    </button>
+                </div>
+            `;
+
+            return card;
+        }
+
+        // Add to cart function
+        function addToCart(productId) {
+            const token = localStorage.getItem('userToken');
+
+            if (!token) {
+                alert('Please login to add products to cart');
+                window.location.href = 'user-login.html';
+                return;
+            }
+
+            alert(`Product ${productId} added to cart! (Feature to be implemented)`);
+        }
+
+        // Newsletter subscription
+        document.querySelector('.newsletter-btn').addEventListener('click', function() {
+            const email = document.querySelector('.newsletter-input').value;
+            if (email) {
+                alert('Thank you for subscribing to our newsletter!');
+                document.querySelector('.newsletter-input').value = '';
+            } else {
+                alert('Please enter a valid email address.');
+            }
+        });
+
+        // Load products on page load
+        document.addEventListener('DOMContentLoaded', function() {
+            loadProducts();
+        });
+    </script>
+</body>
+</html>

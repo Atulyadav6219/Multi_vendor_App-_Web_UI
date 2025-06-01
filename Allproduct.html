@@ -1,0 +1,364 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Products - MultiVendor Marketplace</title>
+    <link rel="stylesheet" href="main.css">
+    
+</head>
+<body>
+    <!-- Navbar -->
+    <nav class="navbar">
+        <div class="nav-container">
+            <a href="#" class="logo">MultiVendor</a>
+            <ul class="nav-links">
+                <li><a href="#" onclick="window.location.href='Home.html'">Home</a></li>
+                <li><a href="#" onclick="window.location.href='about.html'">About</a></li>
+                <li><a href="#" onclick="window.location.href='categories.html'">Categories</a></li>
+                <li><a href="#" onclick="window.location.href='admin-login.html'">Admin Login</a></li>
+                <li><a href="#" onclick="window.location.href='user-login.html'" id="loginLink">User Login</a></li>
+                <li><a href="#" onclick="logout()" id="logoutLink" style="display: none;">Logout</a></li>
+                <li><a href="#" onclick="window.location.href='cart.html'" id="cartLink"></a></li>
+            </ul>
+        </div>
+    </nav>
+
+    <!-- Main Content -->
+    <main class="main-content">
+        <!-- Hero Section -->
+        <section class="hero-section">
+            <div class="container">
+                <div class="hero-content">
+                    <h1>Discover Amazing Products</h1>
+                    <p>Explore thousands of products from trusted vendors worldwide. Find exactly what you're looking for with our advanced search and filtering options.</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- Filters Section -->
+        <section class="filters-section">
+            <div class="container">
+                <div class="filters-grid">
+                    <div class="filter-group">
+                        <label for="searchInput">Search Products</label>
+                        <input type="text" id="searchInput" class="filter-input" placeholder="Search by name or description...">
+                    </div>
+                    <div class="filter-group">
+                        <label for="categoryFilter">Category</label>
+                        <select id="categoryFilter" class="filter-input">
+                            <option value="">All Categories</option>
+                        </select>
+                    </div>
+                    <div class="filter-group">
+                        <label for="priceSort">Sort by Price</label>
+                        <select id="priceSort" class="filter-input">
+                            <option value="">Default</option>
+                            <option value="low-high">Price: Low to High</option>
+                            <option value="high-low">Price: High to Low</option>
+                        </select>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Products Section -->
+        <section class="products-section">
+            <div class="container">
+                <div class="section-header">
+                    <h2>Featured Products</h2>
+                    <p>Browse our curated selection of high-quality products from verified vendors</p>
+                </div>
+
+                <!-- Loading Spinner -->
+                <div id="loadingSpinner" class="loading-spinner">
+                    <div class="spinner"></div>
+                    <p>Loading amazing products...</p>
+                </div>
+
+                <!-- Products Grid -->
+                <div id="productsGrid" class="products-grid">
+                    <!-- Products will be loaded here dynamically -->
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <!-- Login Modal -->
+    <div id="loginModal" class="modal">
+        <div class="modal-content">
+            <h3>Login Required</h3>
+            <p>Please log in to add items to your cart and make purchases.</p>
+            <div class="modal-actions">
+                <button class="btn btn-primary" onclick="demoLogin()">Demo Login</button>
+                <button class="btn btn-secondary" onclick="closeLoginModal()">Cancel</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="footer-content">
+            <div class="footer-section">
+                <h3>About Us</h3>
+                <p>MultiVendor Marketplace connects buyers and sellers worldwide, providing a secure and efficient platform for e-commerce.</p>
+            </div>
+            <div class="footer-section">
+                <h3>Quick Links</h3>
+                <ul class="footer-links">
+                    <li><a href="#">About</a></li>
+                    <li><a href="#">Categories</a></li>
+                    <li><a href="#">Support</a></li>
+                    <li><a href="#">Privacy Policy</a></li>
+                    <li><a href="#">Terms of Service</a></li>
+                </ul>
+            </div>
+            <div class="footer-section">
+                <h3>Contact Info</h3>
+                <p>📧 info@multivendor.com</p>
+                <p>📞 +1 (555) 123-4567</p>
+                <p>📍 123 Business St, City, State 12345</p>
+            </div>
+            <div class="footer-section">
+                <h3>Newsletter</h3>
+                <p>Subscribe to get updates on new products and offers.</p>
+                <div class="newsletter-form">
+                    <input type="email" class="newsletter-input" placeholder="Enter your email">
+                    <button class="newsletter-btn">Subscribe</button>
+                </div>
+            </div>
+        </div>
+        <div class="footer-bottom">
+            <p>&copy; 2024 MultiVendor Marketplace. All rights reserved.</p>
+        </div>
+    </footer>
+
+    <script>
+        const apiUrl = "http://localhost:5116/api";
+        let allProducts = [];
+        let allCategories = [];
+        let isUserLoggedIn = false;
+
+        // Initialize page
+        window.addEventListener('DOMContentLoaded', function () {
+            checkLoginStatus();
+            updateNavbar();
+            loadCategories();
+            loadProducts();
+            setupEventListeners();
+        });
+
+        function checkLoginStatus() {
+            const user = localStorage.getItem("loggedInUser");
+            isUserLoggedIn = !!user;
+        }
+
+        function updateNavbar() {
+            const cartLink = document.getElementById('cartLink');
+            const loginLink = document.getElementById('loginLink');
+            const logoutLink = document.getElementById('logoutLink');
+
+            if (isUserLoggedIn) {
+                cartLink.classList.add('show');
+                loginLink.style.display = 'none';
+                logoutLink.style.display = 'block';
+            } else {
+                cartLink.classList.remove('show');
+                loginLink.style.display = 'block';
+                logoutLink.style.display = 'none';
+            }
+        }
+
+        function logout() {
+            isUserLoggedIn = false;
+            localStorage.removeItem("loggedInUser");
+            updateNavbar();
+            alert('You have been logged out successfully!');
+        }
+
+        function setupEventListeners() {
+            const searchInput = document.getElementById('searchInput');
+            const categoryFilter = document.getElementById('categoryFilter');
+            const priceSort = document.getElementById('priceSort');
+
+            if (searchInput && categoryFilter && priceSort) {
+                searchInput.addEventListener('input', filterProducts);
+                categoryFilter.addEventListener('change', filterProducts);
+                priceSort.addEventListener('change', filterProducts);
+            }
+        }
+
+        async function loadCategories() {
+            try {
+                const response = await fetch(`${apiUrl}/Category`);
+                if (!response.ok) throw new Error('Failed to load categories');
+
+                allCategories = await response.json();
+                const categoryFilter = document.getElementById('categoryFilter');
+
+                if (categoryFilter) {
+                    categoryFilter.innerHTML = '<option value="">All Categories</option>' +
+                        allCategories.map(category =>
+                            `<option value="${category.categoryId}">${category.categoryName}</option>`
+                        ).join('');
+                }
+            } catch (error) {
+                console.error('Error loading categories:', error);
+            }
+        }
+
+        async function loadProducts() {
+            const loadingSpinner = document.getElementById('loadingSpinner');
+            const productsGrid = document.getElementById('productsGrid');
+
+            try {
+                if (loadingSpinner) loadingSpinner.style.display = 'block';
+
+                const response = await fetch(`${apiUrl}/Product/all-products`);
+                if (!response.ok) throw new Error(`Failed to load products: ${response.status} ${response.statusText}`);
+
+                allProducts = await response.json();
+                console.log("list of all products... :-  ", allProducts);
+
+                // Normalize product data
+                allProducts = allProducts.map(product => ({
+                    id: product.id || product.productId,
+                    name: product.name || product.productName || 'Unnamed Product',
+                    description: product.description || product.productDescription || 'No description available',
+                    price: parseFloat(product.price || product.productPrice) || 0,
+                    image: product.image || product.productImage || '/api/placeholder/280/200',
+                    vendor: product.vendor || product.vendorName || product.user?.username || 'Unknown Vendor',
+                    categoryId: product.categoryId || null
+                }));
+
+                displayProducts(allProducts);
+
+            } catch (error) {
+                console.error('Error loading products:', error);
+                if (productsGrid) {
+                    productsGrid.innerHTML = `
+                        <div class="error-message">
+                            <h3>⚠️ Unable to load products</h3>
+                            <p>Error: ${error.message}</p>
+                            <p>Please check your connection and ensure the API server is running.</p>
+                            <button onclick="loadProducts()" class="btn btn-primary">Retry</button>
+                        </div>
+                    `;
+                }
+            } finally {
+                if (loadingSpinner) loadingSpinner.style.display = 'none';
+            }
+        }
+
+        function displayProducts(products) {
+            const productsGrid = document.getElementById('productsGrid');
+            if (!productsGrid) return;
+
+            if (products.length === 0) {
+                productsGrid.innerHTML = `
+                    <div class="no-products">
+                        <div class="no-products-icon">😔</div>
+                        <h3>No products found</h3>
+                        <p>Try adjusting your search or filter criteria.</p>
+                    </div>
+                `;
+                return;
+            }
+
+            productsGrid.innerHTML = products.map(product => {
+                let imageUrl = product.image;
+
+                if (!imageUrl || imageUrl === 'string' || imageUrl === '') {
+                    imageUrl = '/assets/no-image.png';
+                } else if (!imageUrl.startsWith('http') && !imageUrl.startsWith('/')) {
+                    imageUrl = `${apiUrl}/Images/${imageUrl}`;
+                }
+
+                return `
+                    <div class="product-card">
+                        <img src="${imageUrl}" alt="${product.name}" class="product-image"
+                             onerror="this.onerror=null; this.src='https://via.placeholder.com/280x200/f8f9fa/6c757d?text=No+Image';">
+                        <div class="product-info">
+                            <h3 class="product-name">${product.name}</h3>
+                            <p class="product-description">${product.description}</p>
+                            <p class="product-price">₹${product.price.toFixed(2)}</p>
+                            <p class="product-vendor">Sold by: ${product.vendor}</p>
+                            <div class="product-actions">
+                                <a href="#" class="btn btn-primary" onclick="addToCart(${product.id})">Add to Cart</a>
+                                <a href="#" class="btn btn-secondary" onclick="viewProduct(${product.id})">Details</a>
+                            </div>
+                        </div>
+                    </div>
+                `;
+            }).join('');
+        }
+
+        function filterProducts() {
+            const searchTerm = document.getElementById('searchInput')?.value.toLowerCase() || '';
+            const categoryFilter = document.getElementById('categoryFilter')?.value || '';
+            const priceSort = document.getElementById('priceSort')?.value;
+
+            let filteredProducts = allProducts.filter(product => {
+                const matchesSearch = product.name.toLowerCase().includes(searchTerm) ||
+                    product.description.toLowerCase().includes(searchTerm);
+                const matchesCategory = !categoryFilter || product.categoryId == categoryFilter;
+
+                return matchesSearch && matchesCategory;
+            });
+
+            if (priceSort === 'low-high') {
+                filteredProducts.sort((a, b) => a.price - b.price);
+            } else if (priceSort === 'high-low') {
+                filteredProducts.sort((a, b) => b.price - a.price);
+            }
+
+            displayProducts(filteredProducts);
+        }
+
+        function addToCart(productId) {
+            if (!isUserLoggedIn) {
+                showLoginModal();
+                return;
+            }
+
+            const product = allProducts.find(p => p.id === productId);
+            if (product) {
+                alert(`${product.name} added to cart!`);
+                console.log('Product added to cart:', product);
+            }
+        }
+
+        function viewProduct(productId) {
+            window.location.href = `product-details.html?id=${productId}`;
+        }
+
+        function showLoginModal() {
+            const modal = document.getElementById('loginModal');
+            if (modal) modal.classList.add('show');
+        }
+
+        function closeLoginModal() {
+            const modal = document.getElementById('loginModal');
+            if (modal) modal.classList.remove('show');
+        }
+
+        function demoLogin() {
+            isUserLoggedIn = true;
+            localStorage.setItem("loggedInUser", JSON.stringify({ demo: true }));
+            updateNavbar();
+            closeLoginModal();
+            alert('Demo login successful! You can now add items to cart.');
+        }
+
+        // Close login modal when clicking outside
+        const loginModal = document.getElementById('loginModal');
+        if (loginModal) {
+            loginModal.addEventListener('click', function (e) {
+                if (e.target === this) {
+                    closeLoginModal();
+                }
+            });
+        }
+    </script>
+</body>
+</html>

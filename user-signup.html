@@ -1,0 +1,727 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>User Login & Signup - MultiVendor</title>
+    <style>
+         * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            line-height: 1.6;
+            color: #333;
+        }
+
+        /* Navbar */
+        .navbar {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            padding: 1rem 0;
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+
+        .nav-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 0 2rem;
+        }
+
+        .logo {
+            color: white;
+            font-size: 1.8rem;
+            font-weight: bold;
+            text-decoration: none;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .nav-links {
+            display: flex;
+            list-style: none;
+            gap: 2rem;
+            align-items: center;
+        }
+
+        .nav-links a {
+            color: white;
+            text-decoration: none;
+            font-weight: 500;
+            transition: color 0.3s ease;
+            padding: 0.5rem 1rem;
+            border-radius: 5px;
+        }
+
+        .nav-links a:hover {
+            background: rgba(255,255,255,0.1);
+        }
+
+        /* Main Content */
+        .main-content {
+            max-width: 800px;
+            margin: 2rem auto;
+            padding: 0 2rem;
+            min-height: calc(100vh - 400px);
+        }
+
+        .auth-container {
+            display: flex;
+            gap: 3rem;
+            justify-content: center;
+            flex-wrap: wrap;
+        }
+
+        .auth-box {
+            background: white;
+            padding: 2.5rem;
+            border-radius: 12px;
+            box-shadow: 0 8px 25px rgba(0,0,0,0.1);
+            width: 350px;
+            max-width: 100%;
+        }
+
+        .auth-box h1 {
+            color: #333;
+            margin-bottom: 2rem;
+            text-align: center;
+            font-size: 1.8rem;
+        }
+
+        .form-group {
+            margin-bottom: 1.5rem;
+        }
+
+        .form-group input,
+        .form-group textarea {
+            width: 100%;
+            padding: 0.75rem;
+            border: 2px solid #e1e5e9;
+            border-radius: 8px;
+            font-size: 1rem;
+            transition: border-color 0.3s;
+        }
+
+        .form-group input:focus,
+        .form-group textarea:focus {
+            outline: none;
+            border-color: #667eea;
+        }
+
+        .btn {
+            width: 100%;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 0.75rem;
+            border: none;
+            border-radius: 8px;
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: transform 0.2s;
+        }
+
+        .btn:hover {
+            transform: translateY(-2px);
+        }
+
+        .btn:active {
+            transform: translateY(0);
+        }
+
+        .error {
+            color: #e74c3c;
+            font-size: 0.9rem;
+            margin-top: 1rem;
+            text-align: center;
+            min-height: 20px;
+        }
+
+        .divider {
+            margin: 3rem 0;
+            text-align: center;
+            position: relative;
+        }
+
+        .divider::before {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 0;
+            right: 0;
+            height: 1px;
+            background: #e1e5e9;
+        }
+
+        .divider span {
+            background: #f5f5f5;
+            padding: 0 1rem;
+            color: #666;
+            font-size: 0.9rem;
+        }
+
+        /* Footer Styles */
+        .footer {
+            background: #2c3e50;
+            color: white;
+            padding: 3rem 0 1rem;
+            margin-top: 4rem;
+        }
+
+        .footer-content {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 2rem;
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 2rem;
+        }
+
+        .footer-section h3 {
+            color: #3498db;
+            margin-bottom: 1rem;
+            font-size: 1.2rem;
+        }
+
+        .footer-section p {
+            color: #bdc3c7;
+            line-height: 1.6;
+            margin-bottom: 1rem;
+        }
+
+        .footer-section ul {
+            list-style: none;
+        }
+
+        .footer-section ul li {
+            margin-bottom: 0.5rem;
+        }
+
+        .footer-section ul li a {
+            color: #bdc3c7;
+            text-decoration: none;
+            transition: color 0.3s;
+        }
+
+        .footer-section ul li a:hover {
+            color: #3498db;
+        }
+
+        .social-icons {
+            display: flex;
+            gap: 1rem;
+            margin-top: 1rem;
+        }
+
+        .social-icon {
+            width: 40px;
+            height: 40px;
+            background: #3498db;
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            text-decoration: none;
+            transition: background-color 0.3s;
+        }
+
+        .social-icon:hover {
+            background: #2980b9;
+        }
+
+        .newsletter-form {
+            display: flex;
+            flex-direction: column;
+            gap: 1rem;
+            margin-top: 1rem;
+        }
+
+        .newsletter-input {
+            padding: 0.75rem;
+            border: none;
+            border-radius: 8px;
+            font-size: 1rem;
+        }
+
+        .newsletter-btn {
+            background: #3498db;
+            color: white;
+            padding: 0.75rem;
+            border: none;
+            border-radius: 8px;
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+
+        .newsletter-btn:hover {
+            background: #2980b9;
+        }
+
+        .footer-bottom {
+            text-align: center;
+            padding: 1rem 0;
+            border-top: 1px solid #34495e;
+            margin-top: 2rem;
+            color: #bdc3c7;
+        }
+
+        /* Responsive Design */
+        @media (max-width: 768px) {
+            .nav-container {
+                flex-direction: column;
+                gap: 1rem;
+                padding: 0 1rem;
+            }
+
+            .nav-links {
+                gap: 1rem;
+                flex-wrap: wrap;
+                justify-content: center;
+            }
+
+            .main-content {
+                padding: 0 1rem;
+            }
+
+            .auth-container {
+                gap: 2rem;
+            }
+
+            .auth-box {
+                width: 100%;
+                padding: 2rem;
+            }
+
+            .footer-content {
+                padding: 0 1rem;
+            }
+        }
+    </style>
+</head>
+<body>
+  <!-- Navbar -->
+    <nav class="navbar">
+        <div class="nav-container">
+            <a href="Home.html" class="logo">
+                📦 MultiVendor
+            </a>
+            <ul class="nav-links">
+                <li><a href="Home.html">Home</a></li>
+                <li><a href="about.html">About</a></li>
+                <li><a href="Allproduct.html">Product</a></li>
+                <li><a href="categories.html">Categories</a></li>
+                <li><a href="admin-login.html">Admin Login</a></li>
+                <li><a href="user-login.html">User Login</a></li>
+            </ul>
+        </div>
+    </nav>
+    
+
+    <!-- Main Content -->
+    <main class="main-content">
+        <div class="auth-container">
+            <!-- Login Form -->
+            <!-- <div class="auth-box">
+                <h1>User Login</h1>
+                <form id="loginForm">
+                    <div class="form-group">
+                        <input type="email" id="loginEmail" placeholder="Email" required />
+                    </div>
+                    <div class="form-group">
+                        <input type="password" id="loginPassword" placeholder="Password" required />
+                    </div>
+                    <button type="button" class="btn" onclick="loginUser()">Login</button>
+                    <p id="loginError" class="error"></p>
+                     <p class="text-center mt-2">
+                        Don't have an account? <a href="user-signup.html">Sign Up</a>
+                    </p>
+                </form>
+            </div> -->
+
+            <!-- Signup Form -->
+            <div class="auth-box">
+                <h1>User Signup</h1>
+                <form id="signupForm">
+                    <div class="form-group">
+                        <input type="text" id="signupUsername" placeholder="Username" required />
+                    </div>
+                    <div class="form-group">
+                        <input type="email" id="signupEmail" placeholder="Email" required />
+                    </div>
+                    <div class="form-group">
+                        <input type="password" id="signupPassword" placeholder="Password" required />
+                    </div>
+                    <div class="form-group">
+                        <input type="password" id="signupConfirmPassword" placeholder="Confirm Password" required />
+                    </div>
+                    <div class="form-group">
+                        <input type="text" id="signupContact" placeholder="Contact Number" required />
+                    </div>
+                    <div class="form-group">
+                        <input type="url" id="signupImage" placeholder="Profile Image URL (optional)" />
+                    </div>
+                    <button type="button" class="btn" onclick="signupUser()">Sign Up</button>
+                    <p id="signupError" class="error"></p>
+                    <p class="text-center mt-2">
+                        Already have an account? <a href="user-login.html">Sign In</a>
+                    </p>
+                </form>
+            </div>
+        </div>
+    </main>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="footer-content">
+            <div class="footer-section">
+                <h3>About Us</h3>
+                <p>MultiVendor Marketplace connects buyers and sellers worldwide, providing a secure and efficient platform for e-commerce.</p>
+                <div class="social-icons">
+                    <a href="#" class="social-icon">📘</a>
+                    <a href="#" class="social-icon">🐦</a>
+                    <a href="#" class="social-icon">📷</a>
+                    <a href="#" class="social-icon">📺</a>
+                </div>
+            </div>
+            
+            <div class="footer-section">
+                <h3>Quick Links</h3>
+                <ul>
+                    <li><a href="about.html">About</a></li>
+                    <li><a href="categories.html">Categories</a></li>
+                    <li><a href="support.html">Support</a></li>
+                    <li><a href="privacy.html">Privacy Policy</a></li>
+                    <li><a href="terms.html">Terms of Service</a></li>
+                </ul>
+            </div>
+            
+            <div class="footer-section">
+                <h3>Contact Info</h3>
+                <p>📧 info@multivendor.com</p>
+                <p>📞 +1 (555) 123-4567</p>
+                <p>📍 123 Business St, City, State 12345</p>
+            </div>
+            
+            <div class="footer-section">
+                <h3>Newsletter</h3>
+                <p>Subscribe to get updates on new products and offers.</p>
+                <div class="newsletter-form">
+                    <input type="email" class="newsletter-input" placeholder="Enter your email">
+                    <button class="newsletter-btn">Subscribe</button>
+                </div>
+            </div>
+        </div>
+        
+        <div class="footer-bottom">
+            <p>&copy; 2024 MultiVendor Marketplace. All rights reserved.</p>
+        </div>
+    </footer>
+
+    <!-- <script>const apiBase = "http://localhost:5116/api";
+
+function clearErrors() {
+    document.getElementById("loginError").textContent = "";
+    document.getElementById("signupError").textContent = "";
+}
+
+async function signupUser() {
+    clearErrors();
+
+    const username = document.getElementById("signupUsername").value.trim();
+    const email = document.getElementById("signupEmail").value.trim();
+    const password = document.getElementById("signupPassword").value;
+    const confirmPassword = document.getElementById("signupConfirmPassword").value;
+    const contact = document.getElementById("signupContact").value.trim();
+    const imageUrl = document.getElementById("signupImage").value.trim(); // Changed from files[0] to value
+
+    if (!username || !email || !password || !confirmPassword || !contact) {
+        document.getElementById("signupError").textContent = "Please fill all required fields";
+        return;
+    }
+    
+    if (password !== confirmPassword) {
+        document.getElementById("signupError").textContent = "Passwords do not match";
+        return;
+    }
+
+    // Basic email validation
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    if (!emailRegex.test(email)) {
+        document.getElementById("signupError").textContent = "Please enter a valid email address";
+        return;
+    }
+
+    // Basic password strength check
+    if (password.length < 6) {
+        document.getElementById("signupError").textContent = "Password must be at least 6 characters long";
+        return;
+    }
+
+    // Validate image URL if provided
+    if (imageUrl && !isValidUrl(imageUrl)) {
+        document.getElementById("signupError").textContent = "Please enter a valid image URL";
+        return;
+    }
+
+    try {
+        // Since your HTML uses URL input, send as JSON instead of FormData
+        const requestBody = {
+            username: username,
+            email: email,
+            password: password,
+            confirmPassword: confirmPassword,
+            contact: contact
+        };
+
+        // Only add image if URL is provided
+        if (imageUrl) {
+            requestBody.image = imageUrl;
+        }
+
+        const res = await fetch(`${apiBase}/auth/user/signup`, {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json"
+            },
+            body: JSON.stringify(requestBody)
+        });
+
+        if (!res.ok) {
+            const err = await res.text();
+            throw new Error(err);
+        }
+
+        alert("Signup successful! Please login.");
+        
+        // Clear all fields
+        document.getElementById("signupUsername").value = "";
+        document.getElementById("signupEmail").value = "";
+        document.getElementById("signupPassword").value = "";
+        document.getElementById("signupConfirmPassword").value = "";
+        document.getElementById("signupContact").value = "";
+        document.getElementById("signupImage").value = "";
+
+    } catch (error) {
+        console.error("Signup error:", error);
+        document.getElementById("signupError").textContent = error.message || "Signup failed";
+    }
+}
+
+// Helper function to validate URL
+function isValidUrl(string) {
+    try {
+        new URL(string);
+        return true;
+    } catch (_) {
+        return false;
+    }
+}
+
+// Login function (if needed)
+async function loginUser() {
+    clearErrors();
+    const email = document.getElementById("loginEmail").value.trim();
+    const password = document.getElementById("loginPassword").value;
+
+    if (!email || !password) {
+        document.getElementById("loginError").textContent = "Please fill all fields";
+        return;
+    }
+
+    try {
+        const res = await fetch(`${apiBase}/auth/user/login`, {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ username: email, password: password })
+        });
+        
+        if (!res.ok) {
+            const err = await res.text();
+            throw new Error(err);
+        }
+        
+        const data = await res.json();
+        
+        // Store user data (using sessionStorage as alternative to localStorage)
+        sessionStorage.setItem("userId", data.userId);
+        sessionStorage.setItem("username", data.username);
+        sessionStorage.setItem("email", data.email);
+        
+        alert("Login successful!");
+        window.location.href = "product.html";
+        
+    } catch (error) {
+        document.getElementById("loginError").textContent = error.message || "Login failed";
+    }
+}</script> -->
+<script>
+    const apiBase = "http://localhost:5116/api";
+
+function clearErrors() {
+    // Only clear elements that exist on this page
+    const loginError = document.getElementById("loginError");
+    const signupError = document.getElementById("signupError");
+    
+    if (loginError) {
+        loginError.textContent = "";
+    }
+    if (signupError) {
+        signupError.textContent = "";
+    }
+}
+
+async function signupUser() {
+    clearErrors();
+
+    const username = document.getElementById("signupUsername").value.trim();
+    const email = document.getElementById("signupEmail").value.trim();
+    const password = document.getElementById("signupPassword").value;
+    const confirmPassword = document.getElementById("signupConfirmPassword").value;
+    const contact = document.getElementById("signupContact").value.trim();
+    const imageUrl = document.getElementById("signupImage").value.trim(); // Changed from files[0] to value
+
+    if (!username || !email || !password || !confirmPassword || !contact) {
+        document.getElementById("signupError").textContent = "Please fill all required fields";
+        return;
+    }
+    
+    if (password !== confirmPassword) {
+        document.getElementById("signupError").textContent = "Passwords do not match";
+        return;
+    }
+
+    // Basic email validation
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    if (!emailRegex.test(email)) {
+        document.getElementById("signupError").textContent = "Please enter a valid email address";
+        return;
+    }
+
+    // Basic password strength check
+    if (password.length < 6) {
+        document.getElementById("signupError").textContent = "Password must be at least 6 characters long";
+        return;
+    }
+
+    // Validate image URL if provided
+    if (imageUrl && !isValidUrl(imageUrl)) {
+        document.getElementById("signupError").textContent = "Please enter a valid image URL";
+        return;
+    }
+
+    try {
+        // Since your HTML uses URL input, send as JSON instead of FormData
+        const requestBody = {
+            username: username,
+            email: email,
+            password: password,
+            confirmPassword: confirmPassword,
+            contact: contact
+        };
+
+        // Only add image if URL is provided
+        if (imageUrl) {
+            requestBody.image = imageUrl;
+        }
+
+        const res = await fetch(`${apiBase}/auth/user/signup`, {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json"
+            },
+            body: JSON.stringify(requestBody)
+        });
+
+        if (!res.ok) {
+            const err = await res.text();
+            throw new Error(err);
+        }
+
+        alert("Signup successful! Please login.");
+        
+        // Clear all fields
+        document.getElementById("signupUsername").value = "";
+        document.getElementById("signupEmail").value = "";
+        document.getElementById("signupPassword").value = "";
+        document.getElementById("signupConfirmPassword").value = "";
+        document.getElementById("signupContact").value = "";
+        document.getElementById("signupImage").value = "";
+        window.location.href = "user-login.html";
+
+    } catch (error) {
+        console.error("Signup error:", error);
+        document.getElementById("signupError").textContent = error.message || "Signup failed";
+    }
+}
+
+// Helper function to validate URL
+function isValidUrl(string) {
+    try {
+        new URL(string);
+        return true;
+    } catch (_) {
+        return false;
+    }
+}
+
+// Login function (if needed)
+async function loginUser() {
+    clearErrors();
+    const loginEmail = document.getElementById("loginEmail");
+    const loginPassword = document.getElementById("loginPassword");
+    const loginError = document.getElementById("loginError");
+
+    // Check if login elements exist (in case this is called on signup page)
+    if (!loginEmail || !loginPassword || !loginError) {
+        console.error("Login elements not found on this page");
+        return;
+    }
+
+    const email = loginEmail.value.trim();
+    const password = loginPassword.value;
+
+    if (!email || !password) {
+        loginError.textContent = "Please fill all fields";
+        return;
+    }
+
+    try {
+        const res = await fetch(`${apiBase}/auth/user/login`, {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ username: email, password: password })
+        });
+        
+        if (!res.ok) {
+            const err = await res.text();
+            throw new Error(err);
+        }
+        
+        const data = await res.json();
+        
+        // Store user data (using sessionStorage as alternative to localStorage)
+        sessionStorage.setItem("userId", data.userId);
+        sessionStorage.setItem("username", data.username);
+        sessionStorage.setItem("email", data.email);
+        
+        alert("Login successful!");
+        window.location.href = "product.html";
+        
+    } catch (error) {
+        loginError.textContent = error.message || "Login failed";
+    }
+}
+</script>
+</body>
+</html>

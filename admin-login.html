@@ -1,0 +1,299 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Login - Multi-Vendor Marketplace</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Arial', sans-serif;
+            background: linear-gradient(135deg, #2c3e50 0%, #3498db 100%);
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .login-container {
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(10px);
+            padding: 3rem;
+            border-radius: 20px;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
+            width: 100%;
+            max-width: 400px;
+            color: white;
+        }
+
+        .login-header {
+            text-align: center;
+            margin-bottom: 2rem;
+        }
+
+        .admin-icon {
+            font-size: 3rem;
+            margin-bottom: 1rem;
+            display: block;
+        }
+
+        .login-header h1 {
+            font-size: 2rem;
+            margin-bottom: 0.5rem;
+            color: #ecf0f1;
+        }
+
+        .login-header p {
+            opacity: 0.8;
+            color: #bdc3c7;
+        }
+
+        .form-group {
+            margin-bottom: 1.5rem;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 0.5rem;
+            font-weight: bold;
+            color: #ecf0f1;
+        }
+
+        .form-group input {
+            width: 100%;
+            padding: 1rem;
+            border: 1px solid rgba(255, 255, 255, 0.3);
+            border-radius: 10px;
+            background: rgba(255, 255, 255, 0.1);
+            color: white;
+            font-size: 1rem;
+            transition: all 0.3s ease;
+        }
+
+        .form-group input::placeholder {
+            color: rgba(255, 255, 255, 0.7);
+        }
+
+        .form-group input:focus {
+            outline: none;
+            background: rgba(255, 255, 255, 0.2);
+            border-color: #3498db;
+            box-shadow: 0 0 10px rgba(52, 152, 219, 0.3);
+        }
+
+        .btn {
+            width: 100%;
+            padding: 1rem;
+            border: none;
+            border-radius: 10px;
+            font-size: 1.1rem;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            margin-bottom: 1rem;
+        }
+
+        .btn-primary {
+            background: linear-gradient(45deg, #3498db, #2980b9);
+            color: white;
+            box-shadow: 0 8px 25px rgba(52, 152, 219, 0.3);
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 12px 35px rgba(52, 152, 219, 0.4);
+        }
+
+        .error-message {
+            color: #e74c3c;
+            text-align: center;
+            margin-top: 1rem;
+            padding: 0.5rem;
+            background: rgba(231, 76, 60, 0.1);
+            border-radius: 5px;
+            display: none;
+        }
+
+        .success-message {
+            color: #27ae60;
+            text-align: center;
+            margin-top: 1rem;
+            padding: 0.5rem;
+            background: rgba(39, 174, 96, 0.1);
+            border-radius: 5px;
+            display: none;
+        }
+
+        .links {
+            text-align: center;
+            margin-top: 2rem;
+        }
+
+        .links a {
+            color: #bdc3c7;
+            text-decoration: none;
+            opacity: 0.8;
+            transition: opacity 0.3s ease;
+        }
+
+        .links a:hover {
+            opacity: 1;
+            color: white;
+        }
+
+        .back-home {
+            position: absolute;
+            top: 2rem;
+            left: 2rem;
+            color: white;
+            text-decoration: none;
+            font-size: 1.5rem;
+            transition: transform 0.3s ease;
+        }
+
+        .back-home:hover {
+            transform: scale(1.1);
+        }
+
+        .default-credentials {
+            background: rgba(255, 255, 255, 0.1);
+            padding: 1rem;
+            border-radius: 10px;
+            margin-bottom: 2rem;
+            border-left: 4px solid #3498db;
+        }
+
+        .default-credentials h4 {
+            color: #3498db;
+            margin-bottom: 0.5rem;
+        }
+
+        .default-credentials p {
+            font-size: 0.9rem;
+            opacity: 0.8;
+        }
+    </style>
+</head>
+<body>
+    <a href="Home.html" class="back-home">🏠</a>
+
+    <div class="login-container">
+        <div class="login-header">
+            <span class="admin-icon">👨‍💼</span>
+            <h1>Admin Panel</h1>
+            <p>Secure access for administrators</p>
+        </div>
+
+        <div class="default-credentials">
+            <h4>Default Credentials</h4>
+            <p><strong>Username:</strong> admin</p>
+            <p><strong>Password:</strong> atul</p>
+        </div>
+
+        <form id="adminLoginForm">
+            <div class="form-group">
+                <label for="username">Username</label>
+                <input type="text" id="username" name="username" placeholder="Enter admin username" value="admin" required>
+            </div>
+
+            <div class="form-group">
+                <label for="password">Password</label>
+                <input type="password" id="password" name="password" placeholder="Enter admin password" value="atul" required>
+            </div>
+
+            <button type="submit" class="btn btn-primary">Admin Login</button>
+        </form>
+
+        <div id="errorMessage" class="error-message"></div>
+        <div id="successMessage" class="success-message"></div>
+
+        <div class="links">
+            <a href="user-login.html">User Login</a> | 
+            <a href="index.html">Back to Home</a>
+        </div>
+    </div>
+
+     <script>
+        const apiUrl = "http://localhost:5116/api";
+
+        document.getElementById('adminLoginForm').addEventListener('submit', async function(e) {
+            e.preventDefault();
+            
+            const username = document.getElementById('username').value.trim();
+            const password = document.getElementById('password').value;
+            
+            if (!username || !password) {
+                showError('Please fill in all fields');
+                return;
+            }
+
+            try {
+                const response = await fetch(`${apiUrl}/auth/admin/login`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({ username, password })
+                });
+
+                if (!response.ok) {
+                    const errorText = await response.text();
+                    throw new Error(errorText || 'Admin login failed');
+                }
+
+                const data = await response.json();
+                
+                // Store admin data in localStorage
+                localStorage.setItem('adminId', '1'); // Hardcoded as per your original code
+                localStorage.setItem('adminUsername', username);
+                localStorage.setItem('isAdminLoggedIn', 'true');
+                
+                showSuccess('Admin login successful! Redirecting...');
+                
+                setTimeout(() => {
+                    window.location.href = 'admin-dashboard.html';
+                }, 1500);
+
+            } catch (error) {
+                showError(error.message || 'Invalid admin credentials');
+            }
+        });
+
+        function showError(message) {
+            const errorDiv = document.getElementById('errorMessage');
+            const successDiv = document.getElementById('successMessage');
+            
+            errorDiv.textContent = message;
+            errorDiv.style.display = 'block';
+            successDiv.style.display = 'none';
+            
+            setTimeout(() => {
+                errorDiv.style.display = 'none';
+            }, 5000);
+        }
+
+        function showSuccess(message) {
+            const errorDiv = document.getElementById('errorMessage');
+            const successDiv = document.getElementById('successMessage');
+            
+            successDiv.textContent = message;
+            successDiv.style.display = 'block';
+            errorDiv.style.display = 'none';
+        }
+
+        // Check if admin is already logged in
+        window.addEventListener('DOMContentLoaded', function() {
+            const isAdminLoggedIn = localStorage.getItem('isAdminLoggedIn');
+            if (isAdminLoggedIn === 'true') {
+                window.location.href = 'admin-dashboard.html';
+            }
+        });
+    </script> 
+</body>
+</html>

@@ -1,0 +1,614 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>User Dashboard - My Products</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            color: white;
+        }
+
+        /* Header */
+        .header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 20px 40px;
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(10px);
+            border-bottom: 1px solid rgba(255, 255, 255, 0.2);
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            font-size: 24px;
+            font-weight: bold;
+        }
+
+        .user-info {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .logout-btn {
+            background: #e74c3c;
+            color: white;
+            border: none;
+            padding: 8px 16px;
+            border-radius: 5px;
+            cursor: pointer;
+            font-weight: 500;
+            transition: background 0.3s ease;
+        }
+
+        .logout-btn:hover {
+            background: #c0392b;
+        }
+
+        /* Main Container */
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 30px 20px;
+        }
+
+        /* Stats Cards */
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 20px;
+            margin-bottom: 40px;
+        }
+
+        .stat-card {
+            background: rgba(255, 255, 255, 0.15);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            border-radius: 15px;
+            padding: 25px;
+            text-align: center;
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+
+        .stat-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.2);
+        }
+
+        .stat-number {
+            font-size: 48px;
+            font-weight: bold;
+            margin-bottom: 10px;
+            color: #ffd700;
+        }
+
+        .stat-label {
+            font-size: 18px;
+            opacity: 0.9;
+        }
+
+        /* Product Management Section */
+        .product-section {
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            border-radius: 20px;
+            padding: 30px;
+            margin-bottom: 30px;
+        }
+
+        .section-header {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            margin-bottom: 25px;
+            font-size: 24px;
+            font-weight: bold;
+        }
+
+        .section-icon {
+            width: 40px;
+            height: 40px;
+            background: #ffd700;
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 20px;
+        }
+
+        /* Form Styles */
+        .form-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+            margin-bottom: 20px;
+        }
+
+        .form-group {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .form-group.full-width {
+            grid-column: 1 / -1;
+        }
+
+        label {
+            margin-bottom: 8px;
+            font-weight: 500;
+            opacity: 0.9;
+        }
+
+        input, select, textarea {
+            padding: 12px 15px;
+            border: 1px solid rgba(255, 255, 255, 0.3);
+            border-radius: 8px;
+            background: rgba(255, 255, 255, 0.1);
+            color: white;
+            font-size: 14px;
+            transition: border-color 0.3s ease, background 0.3s ease;
+        }
+
+        input:focus, select:focus, textarea:focus {
+            outline: none;
+            border-color: #ffd700;
+            background: rgba(255, 255, 255, 0.15);
+        }
+
+        input::placeholder, textarea::placeholder {
+            color: rgba(255, 255, 255, 0.6);
+        }
+
+        textarea {
+            resize: vertical;
+            min-height: 100px;
+        }
+
+        .save-btn {
+            background: linear-gradient(45deg, #28a745, #20c997);
+            color: white;
+            border: none;
+            padding: 12px 30px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: 600;
+            font-size: 16px;
+            transition: transform 0.2s ease, box-shadow 0.2s ease;
+        }
+
+        .save-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(40, 167, 69, 0.4);
+        }
+
+        /* Products Table */
+        .products-table {
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            border-radius: 20px;
+            padding: 30px;
+            overflow-x: auto;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 20px;
+        }
+
+        th, td {
+            padding: 15px;
+            text-align: left;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.2);
+        }
+
+        th {
+            background: rgba(255, 255, 255, 0.1);
+            font-weight: 600;
+            color: #ffd700;
+        }
+
+        tr:hover {
+            background: rgba(255, 255, 255, 0.05);
+        }
+
+        .product-image {
+            width: 60px;
+            height: 60px;
+            object-fit: cover;
+            border-radius: 8px;
+            border: 2px solid rgba(255, 255, 255, 0.2);
+        }
+
+        .action-btn {
+            padding: 6px 12px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 12px;
+            font-weight: 500;
+            margin-right: 5px;
+            transition: transform 0.2s ease;
+        }
+
+        .action-btn:hover {
+            transform: translateY(-1px);
+        }
+
+        .edit-btn {
+            background: #f39c12;
+            color: white;
+        }
+
+        .delete-btn {
+            background: #e74c3c;
+            color: white;
+        }
+
+        .error {
+            color: #ff6b6b;
+            background: rgba(255, 107, 107, 0.1);
+            padding: 10px;
+            border-radius: 5px;
+            margin-top: 10px;
+            border: 1px solid rgba(255, 107, 107, 0.3);
+        }
+
+        /* Responsive Design */
+        @media (max-width: 768px) {
+            .header {
+                padding: 15px 20px;
+                flex-direction: column;
+                gap: 15px;
+            }
+
+            .form-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .stats-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .container {
+                padding: 20px 15px;
+            }
+
+            table {
+                font-size: 14px;
+            }
+        }
+
+        /* Loading Animation */
+        .loading {
+            display: inline-block;
+            width: 20px;
+            height: 20px;
+            border: 3px solid rgba(255, 255, 255, 0.3);
+            border-radius: 50%;
+            border-top-color: #ffd700;
+            animation: spin 1s ease-in-out infinite;
+        }
+
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+    </style>
+</head>
+<body>
+    <!-- Header -->
+    <div class="header">
+        <div class="logo">
+            🛍️ My Product Dashboard
+        </div>
+        <div class="user-info">
+            <span>Welcome, <span id="usernameDisplay">User</span></span>
+            <button class="logout-btn" onclick="logoutUser()">Logout</button>
+        </div>
+    </div>
+
+    <!-- Main Container -->
+    <div class="container">
+        <!-- Stats Cards -->
+        <div class="stats-grid">
+            <div class="stat-card">
+                <div class="stat-number" id="totalProducts">0</div>
+                <div class="stat-label">Total Products</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-number" id="activeProducts">0</div>
+                <div class="stat-label">Active Products</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-number" id="totalValue">₹0</div>
+                <div class="stat-label">Total Value</div>
+            </div>
+        </div>
+
+        <!-- Add/Update Product Section -->
+        <div class="product-section">
+            <div class="section-header">
+                <div class="section-icon">📦</div>
+                <span>Add / Update Product</span>
+            </div>
+
+            <input type="hidden" id="productId" />
+
+            <div class="form-grid">
+                <div class="form-group">
+                    <label for="productName">Product Name *</label>
+                    <input type="text" id="productName" placeholder="Enter product name" maxlength="100" />
+                </div>
+
+                <div class="form-group">
+                    <label for="productPrice">Price *</label>
+                    <input type="number" id="productPrice" placeholder="0.00" step="0.01" />
+                </div>
+
+                <div class="form-group">
+                    <label for="productImage">Image URL *</label>
+                    <input type="text" id="productImage" placeholder="https://example.com/image.jpg" maxlength="250" />
+                </div>
+
+                <div class="form-group">
+                    <label for="categoryDropdown">Category *</label>
+                    <select id="categoryDropdown">
+                        <option value="">Select Category</option>
+                    </select>
+                </div>
+
+                <div class="form-group full-width">
+                    <label for="productDescription">Description</label>
+                    <textarea id="productDescription" placeholder="Enter product description (optional)"></textarea>
+                </div>
+            </div>
+
+            <button class="save-btn" onclick="saveProduct()">
+                <span id="saveButtonText">Save Product</span>
+                <span id="saveButtonLoader" class="loading" style="display: none;"></span>
+            </button>
+
+            <div id="productError" class="error" style="display: none;"></div>
+        </div>
+
+        <!-- Products Table -->
+        <div class="products-table">
+            <div class="section-header">
+                <div class="section-icon">📋</div>
+                <span>My Products</span>
+            </div>
+
+            <table id="productTable">
+                <thead>
+                    <tr>
+                        <th>Name</th>
+                        <th>Image</th>
+                        <th>Price</th>
+                        <th>Description</th>
+                        <th>Category</th>
+                        <th>Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <!-- Products will be loaded here -->
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <script>
+        const apiBase = "http://localhost:5116/api";
+
+        let userId = localStorage.getItem("userId");
+        let username = localStorage.getItem("username");
+        document.getElementById("usernameDisplay").textContent = username || "User";
+
+        if (!userId) {
+            alert("Please login first");
+            window.location.href = "Home.html";
+        } else {
+            loadCategories();
+            loadProducts();
+        }
+
+        function logoutUser() {
+            localStorage.clear();
+            window.location.href = "Home.html";
+        }
+
+        async function loadCategories() {
+            try {
+                const res = await fetch(`${apiBase}/Category`);
+                if (!res.ok) throw new Error("Failed to load categories");
+                const data = await res.json();
+
+                const dropdown = document.getElementById("categoryDropdown");
+                dropdown.innerHTML = '<option value="">Select Category</option>';
+                data.forEach(cat => {
+                    const opt = document.createElement("option");
+                    opt.value = cat.categoryId;
+                    opt.text = cat.categoryName;
+                    dropdown.appendChild(opt);
+                });
+            } catch (err) {
+                alert(err.message);
+            }
+        }
+
+        async function loadProducts() {
+            try {
+                const res = await fetch(`${apiBase}/Product/user/${userId}`);
+                if (!res.ok) throw new Error("Failed to load products");
+                const products = await res.json();
+
+                const tbody = document.querySelector("#productTable tbody");
+                tbody.innerHTML = "";
+
+                let totalValue = 0;
+                let activeCount = 0;
+
+                products.forEach(prod => {
+                    const tr = document.createElement("tr");
+                    tr.innerHTML = `
+                        <td>${prod.productName}</td>
+                        <td><img src="${prod.productImage}" alt="${prod.productName}" class="product-image" /></td>
+                        <td>₹${prod.productPrice.toFixed(2)}</td>
+                        <td>${prod.productDescription || "No description"}</td>
+                        <td>${prod.category?.categoryName || "Unknown"}</td>
+                        <td>
+                            <button class="action-btn edit-btn" onclick="editProduct(${prod.productId})">Edit</button>
+                            <button class="action-btn delete-btn" onclick="deleteProduct(${prod.productId})">Delete</button>
+                        </td>
+                    `;
+                    tbody.appendChild(tr);
+
+                    totalValue += prod.productPrice;
+                    activeCount++;
+                });
+
+                // Update stats
+                document.getElementById("totalProducts").textContent = products.length;
+                document.getElementById("activeProducts").textContent = activeCount;
+                document.getElementById("totalValue").textContent = `₹${totalValue.toFixed(2)}`;
+
+            } catch (error) {
+                alert(error.message);
+            }
+        }
+
+        async function saveProduct() {
+            const productId = document.getElementById("productId").value;
+            const productName = document.getElementById("productName").value.trim();
+            const productImage = document.getElementById("productImage").value.trim();
+            const productPrice = parseFloat(document.getElementById("productPrice").value);
+            const productDescription = document.getElementById("productDescription").value.trim();
+            const categoryId = parseInt(document.getElementById("categoryDropdown").value);
+
+            const errorDiv = document.getElementById("productError");
+            const saveButtonText = document.getElementById("saveButtonText");
+            const saveButtonLoader = document.getElementById("saveButtonLoader");
+            
+            errorDiv.style.display = "none";
+            errorDiv.textContent = "";
+
+            if (!productName || !productImage || isNaN(productPrice) || !categoryId) {
+                errorDiv.textContent = "Please fill all required fields (Name, Image, Price, Category)";
+                errorDiv.style.display = "block";
+                return;
+            }
+
+            // Show loading
+            saveButtonText.style.display = "none";
+            saveButtonLoader.style.display = "inline-block";
+
+            const productData = {
+                productName,
+                productImage,
+                productPrice,
+                productDescription,
+                categoryId,
+                userId: parseInt(userId)
+            };
+
+            try {
+                let res;
+                if (productId) {
+                    // Update existing product
+                res = await fetch(`${apiBase}/product/update-product/${productId}`, {
+                    method: "PUT",
+                    headers: { "Content-Type": "application/json" },
+                    body: JSON.stringify(productData)
+                });
+                } else {
+                    // Add new product
+                    res = await fetch(`${apiBase}/Product/add-product`, {
+                        method: "POST",
+                        headers: { "Content-Type": "application/json" },
+                        body: JSON.stringify(productData)
+                    });
+                }
+
+                if (!res.ok) {
+                    const err = await res.text();
+                    throw new Error(err);
+                }
+
+                alert(productId ? "Product updated successfully!" : "Product added successfully!");
+                clearProductForm();
+                loadProducts();
+
+            } catch (error) {
+                errorDiv.textContent = error.message || "Failed to save product";
+                errorDiv.style.display = "block";
+            } finally {
+                // Hide loading
+                saveButtonText.style.display = "inline";
+                saveButtonLoader.style.display = "none";
+            }
+        }
+
+        async function editProduct(productId) {
+            try {
+                const res = await fetch(`${apiBase}/Product/${productId}`);
+                if (!res.ok) throw new Error("Failed to fetch product");
+                const prod = await res.json();
+
+                document.getElementById("productId").value = prod.productId;
+                document.getElementById("productName").value = prod.productName;
+                document.getElementById("productImage").value = prod.productImage;
+                document.getElementById("productPrice").value = prod.productPrice;
+                document.getElementById("productDescription").value = prod.productDescription || "";
+                document.getElementById("categoryDropdown").value = prod.categoryId;
+
+                // Scroll to form
+                document.querySelector(".product-section").scrollIntoView({ behavior: 'smooth' });
+
+            } catch (error) {
+                alert(error.message);
+            }
+        }
+
+        async function deleteProduct(id) {
+            if (!confirm("Are you sure you want to delete this product?")) return;
+
+            try {
+                const res = await fetch(`${apiBase}/Product/delete-product/${id}`, { method: "DELETE" });
+                if (!res.ok) {
+                    const err = await res.text();
+                    throw new Error(err);
+                }
+                alert("Product deleted successfully!");
+                loadProducts();
+            } catch (error) {
+                alert(error.message);
+            }
+        }
+
+        function clearProductForm() {
+            document.getElementById("productId").value = "";
+            document.getElementById("productName").value = "";
+            document.getElementById("productImage").value = "";
+            document.getElementById("productPrice").value = "";
+            document.getElementById("productDescription").value = "";
+            document.getElementById("categoryDropdown").value = "";
+            document.getElementById("productError").style.display = "none";
+        }
+    </script>
+    
+</body>
+</html>

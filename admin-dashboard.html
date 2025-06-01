@@ -1,0 +1,563 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Dashboard - Multi-Vendor Marketplace</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Arial', sans-serif;
+            background: linear-gradient(135deg, #2c3e50 0%, #3498db 100%);
+            min-height: 100vh;
+            color: white;
+        }
+
+        .navbar {
+            background: rgba(0, 0, 0, 0.3);
+            backdrop-filter: blur(10px);
+            padding: 1rem 2rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.2);
+        }
+
+        .navbar h1 {
+            color: #3498db;
+        }
+
+        .navbar .admin-info {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+
+        .logout-btn {
+            background: #e74c3c;
+            color: white;
+            border: none;
+            padding: 0.5rem 1rem;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: background 0.3s ease;
+        }
+
+        .logout-btn:hover {
+            background: #c0392b;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 2rem auto;
+            padding: 0 2rem;
+        }
+
+        .dashboard-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 2rem;
+            margin-bottom: 3rem;
+        }
+
+        .dashboard-card {
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(10px);
+            padding: 2rem;
+            border-radius: 15px;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            text-align: center;
+            transition: all 0.3s ease;
+            cursor: pointer;
+        }
+
+        .dashboard-card:hover {
+            transform: translateY(-5px);
+            background: rgba(255, 255, 255, 0.15);
+        }
+
+        .dashboard-card .icon {
+            font-size: 3rem;
+            margin-bottom: 1rem;
+            display: block;
+        }
+
+        .dashboard-card h3 {
+            font-size: 1.5rem;
+            margin-bottom: 0.5rem;
+            color: #ecf0f1;
+        }
+
+        .dashboard-card p {
+            opacity: 0.8;
+            color: #bdc3c7;
+        }
+
+        .section {
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(10px);
+            padding: 2rem;
+            border-radius: 15px;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            margin-bottom: 2rem;
+        }
+
+        .section h2 {
+            color: #3498db;
+            margin-bottom: 1.5rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .category-form {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 1rem;
+            margin-bottom: 2rem;
+        }
+
+        .form-group {
+            margin-bottom: 1rem;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 0.5rem;
+            font-weight: bold;
+            color: #ecf0f1;
+        }
+
+        .form-group input {
+            width: 100%;
+            padding: 0.8rem;
+            border: 1px solid rgba(255, 255, 255, 0.3);
+            border-radius: 8px;
+            background: rgba(255, 255, 255, 0.1);
+            color: white;
+            font-size: 1rem;
+        }
+
+        .form-group input::placeholder {
+            color: rgba(255, 255, 255, 0.7);
+        }
+
+        .form-group input:focus {
+            outline: none;
+            background: rgba(255, 255, 255, 0.2);
+            border-color: #3498db;
+        }
+
+        .btn {
+            padding: 0.8rem 1.5rem;
+            border: none;
+            border-radius: 8px;
+            font-size: 1rem;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            margin-right: 0.5rem;
+        }
+
+        .btn-primary {
+            background: linear-gradient(45deg, #3498db, #2980b9);
+            color: white;
+        }
+
+        .btn-success {
+            background: linear-gradient(45deg, #27ae60, #229954);
+            color: white;
+        }
+
+        .btn-warning {
+            background: linear-gradient(45deg, #f39c12, #e67e22);
+            color: white;
+        }
+
+        .btn-danger {
+            background: linear-gradient(45deg, #e74c3c, #c0392b);
+            color: white;
+        }
+
+        .btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+        }
+
+        .category-list {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 1rem;
+        }
+
+        .category-card {
+            background: rgba(255, 255, 255, 0.1);
+            padding: 1.5rem;
+            border-radius: 10px;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+        }
+
+        .category-card h4 {
+            color: #3498db;
+            margin-bottom: 0.5rem;
+        }
+
+        .category-card img {
+            width: 60px;
+            height: 60px;
+            border-radius: 50%;
+            object-fit: cover;
+            margin-bottom: 1rem;
+        }
+
+        .category-actions {
+            margin-top: 1rem;
+        }
+
+        .hidden {
+            display: none;
+        }
+
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 1rem;
+            margin-bottom: 2rem;
+        }
+
+        .stat-card {
+            background: rgba(255, 255, 255, 0.1);
+            padding: 1.5rem;
+            border-radius: 10px;
+            text-align: center;
+        }
+
+        .stat-number {
+            font-size: 2rem;
+            font-weight: bold;
+            color: #3498db;
+        }
+
+        .stat-label {
+            opacity: 0.8;
+            margin-top: 0.5rem;
+        }
+
+        @media (max-width: 768px) {
+            .container {
+                padding: 0 1rem;
+            }
+            
+            .category-form {
+                grid-template-columns: 1fr;
+            }
+            
+            .dashboard-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <nav class="navbar">
+        <h1>🛡️ Admin Dashboard</h1>
+        <div class="admin-info">
+            <span>Welcome, <strong id="adminUsername">Admin</strong></span>
+            <button class="logout-btn" onclick="logout()">Logout</button>
+        </div>
+    </nav>
+
+    <div class="container">
+        <!-- Dashboard Overview -->
+        <div class="stats-grid">
+            <div class="stat-card">
+                <div class="stat-number" id="totalCategories">0</div>
+                <div class="stat-label">Total Categories</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-number" id="totalProducts">0</div>
+                <div class="stat-label">Total Products</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-number" id="totalUsers">0</div>
+                <div class="stat-label">Total Users</div>
+            </div>
+        </div>
+
+        <!-- Quick Actions -->
+        <div class="dashboard-grid">
+            <div class="dashboard-card" onclick="showSection('categories')">
+                <span class="icon">📁</span>
+                <h3>Manage Categories</h3>
+                <p>Add, edit, and delete categories</p>
+            </div>
+            <div class="dashboard-card" onclick="showSection('products')">
+                <span class="icon">📦</span>
+                <h3>View Products</h3>
+                <p>Monitor all products in the system</p>
+            </div>
+            <div class="dashboard-card" onclick="showSection('users')">
+                <span class="icon">👥</span>
+                <h3>User Management</h3>
+                <p>View and manage user accounts</p>
+            </div>
+        </div>
+
+        <!-- Category Management Section -->
+        <div id="categorySection" class="section">
+            <h2>📁 Category Management</h2>
+            
+            <div class="category-form">
+                <div class="form-group">
+                    <label for="categoryName">Category Name</label>
+                    <input type="text" id="categoryName" placeholder="Enter category name">
+                </div>
+                <div class="form-group">
+                    <label for="categoryImage">Category Image URL</label>
+                    <input type="text" id="categoryImage" placeholder="Enter image URL">
+                </div>
+                <div class="form-group">
+                    <label for="categoryStatus">Status</label>
+                    <input type="text" id="categoryStatus" placeholder="Active/Inactive">
+                </div>
+                <div class="form-group" style="display: flex; align-items: end; gap: 0.5rem;">
+                    <button id="addCategoryBtn" class="btn btn-success" onclick="createCategory()">Add Category</button>
+                    <button id="updateCategoryBtn" class="btn btn-warning hidden" onclick="updateCategory()">Update</button>
+                    <button id="cancelEditBtn" class="btn btn-danger hidden" onclick="cancelEdit()">Cancel</button>
+                </div>
+            </div>
+
+            <div class="category-list" id="categoryList">
+                <!-- Categories will be loaded here -->
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const apiUrl = "http://localhost:5116/api";
+        let editingCategoryId = null;
+
+        // Check admin authentication
+        window.addEventListener('DOMContentLoaded', function() {
+            const isAdminLoggedIn = localStorage.getItem('isAdminLoggedIn');
+            const adminUsername = localStorage.getItem('adminUsername');
+            
+            if (!isAdminLoggedIn || isAdminLoggedIn !== 'true') {
+                alert('Please login as admin first');
+                window.location.href = 'admin-login.html';
+                return;
+            }
+            
+            document.getElementById('adminUsername').textContent = adminUsername || 'Admin';
+            loadDashboardData();
+        });
+
+        async function loadDashboardData() {
+            await loadCategories();
+            await loadStats();
+        }
+
+        async function loadStats() {
+            try {
+                // Load categories count
+                const categoriesResponse = await fetch(`${apiUrl}/category`);
+                if (categoriesResponse.ok) {
+                    const categories = await categoriesResponse.json();
+                    document.getElementById('totalCategories').textContent = categories.length;
+                }
+
+                // Note: Add API endpoints for products and users count if available
+                document.getElementById('totalProducts').textContent = 'N/A';
+                document.getElementById('totalUsers').textContent = 'N/A';
+            } catch (error) {
+                console.error('Error loading stats:', error);
+            }
+        }
+
+        async function loadCategories() {
+            try {
+                const response = await fetch(`${apiUrl}/category`);
+                if (!response.ok) throw new Error('Failed to load categories');
+                
+                const categories = await response.json();
+                const categoryList = document.getElementById('categoryList');
+                
+                categoryList.innerHTML = categories.map(category => `
+                    <div class="category-card">
+                        <img src="${category.categoryImage}" alt="${category.categoryName}" 
+                             onerror="this.style.display='none'">
+                        <h4>${category.categoryName}</h4>
+                        <p><strong>Status:</strong> ${category.categoryStatus}</p>
+                        <p><strong>ID:</strong> ${category.categoryId}</p>
+                        <div class="category-actions">
+                            <button class="btn btn-warning" onclick="startEdit(${category.categoryId})">Edit</button>
+                            <button class="btn btn-danger" onclick="deleteCategory(${category.categoryId})">Delete</button>
+                        </div>
+                    </div>
+                `).join('');
+            } catch (error) {
+                console.error('Error loading categories:', error);
+                alert('Failed to load categories');
+            }
+        }
+
+        async function createCategory() {
+            const categoryName = document.getElementById('categoryName').value.trim();
+            const categoryImage = document.getElementById('categoryImage').value.trim();
+            const categoryStatus = document.getElementById('categoryStatus').value.trim();
+
+            if (!categoryName || !categoryImage || !categoryStatus) {
+                alert('Please fill all fields');
+                return;
+            }
+
+            try {
+                const response = await fetch(`${apiUrl}/category`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({
+                        categoryName,
+                        categoryImage,
+                        categoryStatus,
+                        adminId: 1
+                    })
+                });
+
+                if (!response.ok) throw new Error('Failed to create category');
+                
+                const message = await response.text();
+                alert(message);
+                clearForm();
+                loadCategories();
+                loadStats();
+            } catch (error) {
+                console.error('Error creating category:', error);
+                alert('Failed to create category');
+            }
+        }
+
+        async function startEdit(categoryId) {
+            try {
+                const response = await fetch(`${apiUrl}/category/${categoryId}`);
+                if (!response.ok) throw new Error('Category not found');
+                
+                const category = await response.json();
+                
+                document.getElementById('categoryName').value = category.categoryName;
+                document.getElementById('categoryImage').value = category.categoryImage;
+                document.getElementById('categoryStatus').value = category.categoryStatus;
+                
+                editingCategoryId = categoryId;
+                
+                document.getElementById('addCategoryBtn').classList.add('hidden');
+                document.getElementById('updateCategoryBtn').classList.remove('hidden');
+                document.getElementById('cancelEditBtn').classList.remove('hidden');
+            } catch (error) {
+                console.error('Error loading category for edit:', error);
+                alert('Failed to load category details');
+            }
+        }
+
+        async function updateCategory() {
+            if (!editingCategoryId) return;
+
+            const categoryName = document.getElementById('categoryName').value.trim();
+            const categoryImage = document.getElementById('categoryImage').value.trim();
+            const categoryStatus = document.getElementById('categoryStatus').value.trim();
+
+            if (!categoryName || !categoryImage || !categoryStatus) {
+                alert('Please fill all fields');
+                return;
+            }
+
+            try {
+                const response = await fetch(`${apiUrl}/category/${editingCategoryId}`, {
+                    method: 'PUT',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({
+                        categoryId: editingCategoryId,
+                        categoryName,
+                        categoryImage,
+                        categoryStatus,
+                        adminId: 1
+                    })
+                });
+
+                if (!response.ok) throw new Error('Failed to update category');
+                
+                const message = await response.text();
+                alert(message);
+                cancelEdit();
+                loadCategories();
+            } catch (error) {
+                console.error('Error updating category:', error);
+                alert('Failed to update category');
+            }
+        }
+
+        async function deleteCategory(categoryId) {
+            if (!confirm('Are you sure you want to delete this category?')) return;
+
+            try {
+                const response = await fetch(`${apiUrl}/category/${categoryId}`, {
+                    method: 'DELETE'
+                });
+
+                if (!response.ok) throw new Error('Failed to delete category');
+                
+                const message = await response.text();
+                alert(message);
+                loadCategories();
+                loadStats();
+                
+                if (editingCategoryId === categoryId) {
+                    cancelEdit();
+                }
+            } catch (error) {
+                console.error('Error deleting category:', error);
+                alert('Failed to delete category');
+            }
+        }
+
+        function cancelEdit() {
+            editingCategoryId = null;
+            clearForm();
+            
+            document.getElementById('addCategoryBtn').classList.remove('hidden');
+            document.getElementById('updateCategoryBtn').classList.add('hidden');
+            document.getElementById('cancelEditBtn').classList.add('hidden');
+        }
+
+        function clearForm() {
+            document.getElementById('categoryName').value = '';
+            document.getElementById('categoryImage').value = '';
+            document.getElementById('categoryStatus').value = '';
+        }
+
+        function showSection(section) {
+            // This function can be expanded to show different sections
+            if (section === 'categories') {
+                document.getElementById('categorySection').scrollIntoView({ behavior: 'smooth' });
+            }
+        }
+
+        function logout() {
+            if (confirm('Are you sure you want to logout?')) {
+                localStorage.removeItem('adminId');
+                localStorage.removeItem('adminUsername');
+                localStorage.removeItem('isAdminLoggedIn');
+                window.location.href = 'admin-login.html';
+            }
+        }
+    </script>
+</body>
+</html>

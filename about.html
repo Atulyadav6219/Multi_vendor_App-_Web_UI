@@ -1,0 +1,740 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>About Us - MultiVendor Marketplace</title>
+    <style>
+         * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            line-height: 1.6;
+            color: #333;
+        }
+
+        /* Navbar */
+        .navbar {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            padding: 1rem 0;
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+
+        .nav-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 0 2rem;
+        }
+
+        .logo {
+            color: white;
+            font-size: 1.8rem;
+            font-weight: bold;
+            text-decoration: none;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .nav-links {
+            display: flex;
+            list-style: none;
+            gap: 2rem;
+            align-items: center;
+        }
+
+        .nav-links a {
+            color: white;
+            text-decoration: none;
+            font-weight: 500;
+            transition: color 0.3s ease;
+            padding: 0.5rem 1rem;
+            border-radius: 5px;
+        }
+
+        .nav-links a:hover {
+            background: rgba(255,255,255,0.1);
+        }
+
+        /* Main Content */
+        main {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 2rem;
+        }
+
+        /* Hero Section */
+        .hero-section {
+            background: linear-gradient(135deg, rgba(139, 126, 216, 0.1) 0%, rgba(161, 140, 209, 0.1) 100%);
+            border-radius: 20px;
+            padding: 4rem 3rem;
+            text-align: center;
+            margin-bottom: 4rem;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+        }
+
+        .hero-section h1 {
+            font-size: 3rem;
+            font-weight: bold;
+            color: #2c3e50;
+            margin-bottom: 1rem;
+        }
+
+        .hero-section p {
+            font-size: 1.3rem;
+            color: #7f8c8d;
+            max-width: 800px;
+            margin: 0 auto;
+        }
+
+        /* Content Sections */
+        .content-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+            gap: 3rem;
+            margin-bottom: 4rem;
+        }
+
+        .content-card {
+            background: white;
+            border-radius: 15px;
+            padding: 2.5rem;
+            box-shadow: 0 8px 25px rgba(0,0,0,0.1);
+            transition: transform 0.3s, box-shadow 0.3s;
+        }
+
+        .content-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 15px 40px rgba(0,0,0,0.15);
+        }
+
+        .content-card .icon {
+            font-size: 3rem;
+            margin-bottom: 1.5rem;
+            display: block;
+        }
+
+        .content-card h3 {
+            font-size: 1.5rem;
+            color: #2c3e50;
+            margin-bottom: 1rem;
+        }
+
+        .content-card p {
+            color: #7f8c8d;
+            line-height: 1.8;
+        }
+
+        /* Statistics Section */
+        .stats-section {
+            background: white;
+            border-radius: 20px;
+            padding: 3rem;
+            margin-bottom: 4rem;
+            box-shadow: 0 8px 25px rgba(0,0,0,0.1);
+        }
+
+        .stats-section h2 {
+            text-align: center;
+            font-size: 2.5rem;
+            color: #2c3e50;
+            margin-bottom: 3rem;
+        }
+
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 2rem;
+        }
+
+        .stat-item {
+            text-align: center;
+            padding: 2rem;
+            border-radius: 15px;
+            background: linear-gradient(135deg, #8b7ed8 0%, #a18cd1 100%);
+            color: white;
+        }
+
+        .stat-number {
+            font-size: 3rem;
+            font-weight: bold;
+            display: block;
+        }
+
+        .stat-label {
+            font-size: 1.1rem;
+            margin-top: 0.5rem;
+            opacity: 0.9;
+        }
+
+        /* Team Section */
+        .team-section {
+            background: white;
+            border-radius: 20px;
+            padding: 3rem;
+            margin-bottom: 4rem;
+            box-shadow: 0 8px 25px rgba(0,0,0,0.1);
+        }
+
+        .team-section h2 {
+            text-align: center;
+            font-size: 2.5rem;
+            color: #2c3e50;
+            margin-bottom: 3rem;
+        }
+
+        .team-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 2rem;
+        }
+
+        .team-member {
+            text-align: center;
+            padding: 2rem;
+            border-radius: 15px;
+            background: #f8f9fa;
+            transition: transform 0.3s;
+        }
+
+        .team-member:hover {
+            transform: translateY(-5px);
+        }
+
+        .team-avatar {
+            width: 100px;
+            height: 100px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, #8b7ed8 0%, #a18cd1 100%);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 2.5rem;
+            color: white;
+            margin: 0 auto 1rem;
+        }
+
+        .team-member h4 {
+            font-size: 1.3rem;
+            color: #2c3e50;
+            margin-bottom: 0.5rem;
+        }
+
+        .team-member .role {
+            color: #8b7ed8;
+            font-weight: 500;
+            margin-bottom: 1rem;
+        }
+
+        .team-member p {
+            color: #7f8c8d;
+            font-size: 0.9rem;
+        }
+
+        /* Values Section */
+        .values-section {
+            background: linear-gradient(135deg, #2c3e50 0%, #34495e 100%);
+            color: white;
+            border-radius: 20px;
+            padding: 3rem;
+            margin-bottom: 4rem;
+        }
+
+        .values-section h2 {
+            text-align: center;
+            font-size: 2.5rem;
+            margin-bottom: 3rem;
+        }
+
+        .values-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 2rem;
+        }
+
+        .value-item {
+            padding: 2rem;
+            border-radius: 15px;
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(10px);
+        }
+
+        .value-item h4 {
+            font-size: 1.3rem;
+            margin-bottom: 1rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .value-item p {
+            opacity: 0.9;
+            line-height: 1.6;
+        }
+
+        /* CTA Section */
+        .cta-section {
+            background: linear-gradient(135deg, #8b7ed8 0%, #a18cd1 100%);
+            color: white;
+            border-radius: 20px;
+            padding: 4rem 3rem;
+            text-align: center;
+            margin-bottom: 4rem;
+        }
+
+        .cta-section h2 {
+            font-size: 2.5rem;
+            margin-bottom: 1rem;
+        }
+
+        .cta-section p {
+            font-size: 1.2rem;
+            margin-bottom: 2rem;
+            opacity: 0.9;
+        }
+
+        .btn {
+            padding: 1rem 2rem;
+            border: none;
+            border-radius: 8px;
+            text-decoration: none;
+            cursor: pointer;
+            transition: all 0.3s;
+            display: inline-block;
+            font-weight: 500;
+            font-size: 1.1rem;
+        }
+
+        .btn-white {
+            background: white;
+            color: #8b7ed8;
+        }
+
+        .btn-white:hover {
+            background: #f8f9fa;
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+        }
+
+        /* Footer */
+        footer {
+            background: #2c3e50;
+            color: white;
+            padding: 3rem 0 1rem 0;
+            margin-top: 4rem;
+        }
+
+        .footer-content {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 0 2rem;
+        }
+
+        .footer-grid {
+            display: grid;
+            grid-template-columns: 2fr 1fr 1fr 1.5fr;
+            gap: 3rem;
+            margin-bottom: 2rem;
+        }
+
+        .footer-section h3 {
+            font-size: 1.3rem;
+            margin-bottom: 1.5rem;
+            color: white;
+        }
+
+        .footer-section ul {
+            list-style: none;
+            padding: 0;
+        }
+
+        .footer-section ul li {
+            margin-bottom: 0.8rem;
+        }
+
+        .footer-section a {
+            color: #bdc3c7;
+            text-decoration: none;
+            transition: color 0.3s;
+        }
+
+        .footer-section a:hover {
+            color: white;
+        }
+
+        .footer-section p {
+            color: #bdc3c7;
+            line-height: 1.6;
+            margin-bottom: 1rem;
+        }
+
+        .contact-info {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            margin-bottom: 0.8rem;
+            color: #bdc3c7;
+        }
+
+        .newsletter-form {
+            display: flex;
+            gap: 0.5rem;
+            margin-top: 1rem;
+        }
+
+        .newsletter-form input {
+            flex: 1;
+            padding: 0.8rem;
+            border: 1px solid #34495e;
+            border-radius: 6px;
+            background: #34495e;
+            color: white;
+        }
+
+        .newsletter-form input::placeholder {
+            color: #bdc3c7;
+        }
+
+        .newsletter-form button {
+            padding: 0.8rem 1.5rem;
+            background: #3498db;
+            color: white;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+            transition: background 0.3s;
+        }
+
+        .newsletter-form button:hover {
+            background: #2980b9;
+        }
+
+        .footer-bottom {
+            border-top: 1px solid #34495e;
+            padding-top: 1.5rem;
+            text-align: center;
+            color: #bdc3c7;
+        }
+
+        /* Responsive Design */
+        @media (max-width: 768px) {
+            .nav-links {
+                gap: 1rem;
+                flex-wrap: wrap;
+            }
+
+            .hero-section {
+                padding: 2rem 1.5rem;
+            }
+
+            .hero-section h1 {
+                font-size: 2rem;
+            }
+
+            .hero-section p {
+                font-size: 1.1rem;
+            }
+
+            .content-grid {
+                grid-template-columns: 1fr;
+                gap: 2rem;
+            }
+
+            .stats-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+
+            .footer-grid {
+                grid-template-columns: 1fr;
+                gap: 2rem;
+            }
+
+            .newsletter-form {
+                flex-direction: column;
+            }
+
+            main {
+                padding: 1rem;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .stats-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Header -->
+    <!-- <header>
+        <nav>
+            <a href="index.html" class="logo">
+                <div class="logo-icon">📦</div>
+                MultiVendor
+            </a>
+            <ul class="nav-links">
+                <li><a href="index.html">Home</a></li>
+                <li><a href="about.html" class="active">About</a></li>
+                <li><a href="#">Product</a></li>
+                <li><a href="#">Categories</a></li>
+                <li><a href="#" id="loginLink">Admin Login</a></li>
+                <li><a href="#" id="userLoginLink">User Login</a></li>
+                <li><a href="#" class="cart-link" id="cartLink" style="display: none;">Cart</a></li>
+                <li><a href="#" onclick="logout()" id="logoutLink" style="display: none;">Logout</a></li>
+            </ul>
+        </nav>
+    </header> -->
+    <!-- Navbar -->
+    <nav class="navbar">
+        <div class="nav-container">
+            <a href="Home.html" class="logo">
+                📦 MultiVendor
+            </a>
+            <ul class="nav-links">
+                <li><a href="Home.html">Home</a></li>
+                <li><a href="about.html">About</a></li>
+                <li><a href="Allproduct.html">Product</a></li>
+                <li><a href="categories.html">Categories</a></li>
+                <li><a href="admin-login.html">Admin Login</a></li>
+                <li><a href="user-login.html">User Login</a></li>
+            </ul>
+        </div>
+    </nav>
+    <!-- Main Content -->
+    <main>
+        <!-- Hero Section -->
+        <section class="hero-section">
+            <h1>About MultiVendor</h1>
+            <p>Connecting buyers and sellers worldwide through our innovative e-commerce platform. We're building the future of online marketplace with trust, innovation, and community at our core.</p>
+        </section>
+
+        <!-- Mission & Vision Cards -->
+        <div class="content-grid">
+            <div class="content-card">
+                <span class="icon">🎯</span>
+                <h3>Our Mission</h3>
+                <p>To empower entrepreneurs and businesses by providing a seamless, secure, and scalable marketplace platform that connects sellers with customers globally, fostering economic growth and innovation.</p>
+            </div>
+            
+            <div class="content-card">
+                <span class="icon">🔮</span>
+                <h3>Our Vision</h3>
+                <p>To become the world's most trusted and innovative multi-vendor marketplace, where every business can thrive and every customer finds exactly what they need with confidence and ease.</p>
+            </div>
+            
+            <div class="content-card">
+                <span class="icon">⚡</span>
+                <h3>Our Technology</h3>
+                <p>Built with cutting-edge technology and modern architecture, our platform ensures fast, reliable, and secure transactions while providing an intuitive experience for both vendors and customers.</p>
+            </div>
+        </div>
+
+        <!-- Statistics Section -->
+        <section class="stats-section">
+            <h2>Our Impact</h2>
+            <div class="stats-grid">
+                <div class="stat-item">
+                    <span class="stat-number">10K+</span>
+                    <span class="stat-label">Active Vendors</span>
+                </div>
+                <div class="stat-item">
+                    <span class="stat-number">500K+</span>
+                    <span class="stat-label">Products Listed</span>
+                </div>
+                <div class="stat-item">
+                    <span class="stat-number">1M+</span>
+                    <span class="stat-label">Happy Customers</span>
+                </div>
+                <div class="stat-item">
+                    <span class="stat-number">50+</span>
+                    <span class="stat-label">Countries Served</span>
+                </div>
+            </div>
+        </section>
+
+        <!-- Team Section -->
+        <section class="team-section">
+            <h2>Meet Our Team</h2>
+            <div class="team-grid">
+                <div class="team-member">
+                    <div class="team-avatar">👨‍💼</div>
+                    <h4>John Smith</h4>
+                    <div class="role">CEO & Founder</div>
+                    <p>Visionary leader with 15+ years in e-commerce, driving innovation and growth.</p>
+                </div>
+                
+                <div class="team-member">
+                    <div class="team-avatar">👩‍💻</div>
+                    <h4>Sarah Johnson</h4>
+                    <div class="role">CTO</div>
+                    <p>Tech expert building scalable solutions and leading our engineering team.</p>
+                </div>
+                
+                <div class="team-member">
+                    <div class="team-avatar">👨‍🎨</div>
+                    <h4>Mike Chen</h4>
+                    <div class="role">Head of Design</div>
+                    <p>Creating beautiful, user-friendly experiences that delight our users.</p>
+                </div>
+                
+                <div class="team-member">
+                    <div class="team-avatar">👩‍📊</div>
+                    <h4>Emily Davis</h4>
+                    <div class="role">VP of Operations</div>
+                    <p>Ensuring smooth operations and exceptional customer service worldwide.</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- Values Section -->
+        <section class="values-section">
+            <h2>Our Core Values</h2>
+            <div class="values-grid">
+                <div class="value-item">
+                    <h4>🤝 Trust & Security</h4>
+                    <p>We prioritize the security of transactions and data, building trust through transparency and reliable service.</p>
+                </div>
+                
+                <div class="value-item">
+                    <h4>🚀 Innovation</h4>
+                    <p>Continuously improving our platform with the latest technology and user-centric features.</p>
+                </div>
+                
+                <div class="value-item">
+                    <h4>🌍 Global Community</h4>
+                    <p>Fostering connections between businesses and customers across borders and cultures.</p>
+                </div>
+                
+                <div class="value-item">
+                    <h4>📈 Growth & Success</h4>
+                    <p>Committed to helping our vendors grow their businesses and achieve their entrepreneurial dreams.</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- CTA Section -->
+        <section class="cta-section">
+            <h2>Ready to Join Our Community?</h2>
+            <p>Whether you're a seller looking to expand your business or a buyer seeking quality products, MultiVendor is your gateway to success.</p>
+            <a href="#" class="btn btn-white">Get Started Today</a>
+        </section>
+    </main>
+
+    <!-- Footer -->
+    <footer>
+        <div class="footer-content">
+            <div class="footer-grid">
+                <div class="footer-section">
+                    <h3>About Us</h3>
+                    <p>MultiVendor Marketplace connects buyers and sellers worldwide, providing a secure and efficient platform for e-commerce.</p>
+                </div>
+                
+                <div class="footer-section">
+                    <h3>Quick Links</h3>
+                    <ul>
+                        <li><a href="about.html">About</a></li>
+                        <li><a href="#">Categories</a></li>
+                        <li><a href="#">Support</a></li>
+                        <li><a href="#">Privacy Policy</a></li>
+                        <li><a href="#">Terms of Service</a></li>
+                    </ul>
+                </div>
+                
+                <div class="footer-section">
+                    <h3>Contact Info</h3>
+                    <div class="contact-info">
+                        <span>📧</span>
+                        <span>info@multivendor.com</span>
+                    </div>
+                    <div class="contact-info">
+                        <span>📞</span>
+                        <span>+1 (555) 123-4567</span>
+                    </div>
+                    <div class="contact-info">
+                        <span>📍</span>
+                        <span>123 Business St, City, State 12345</span>
+                    </div>
+                </div>
+                
+                <div class="footer-section">
+                    <h3>Newsletter</h3>
+                    <p>Subscribe to get updates on new products and offers.</p>
+                    <div class="newsletter-form">
+                        <input type="email" placeholder="Enter your email">
+                        <button type="button">Subscribe</button>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="footer-bottom">
+                <p>&copy; 2024 MultiVendor Marketplace. All rights reserved.</p>
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        let isUserLoggedIn = false;
+
+        // Initialize page
+        window.addEventListener('DOMContentLoaded', function () {
+            checkLoginStatus();
+            updateNavbar();
+        });
+
+        function checkLoginStatus() {
+            const user = localStorage.getItem("loggedInUser");
+            isUserLoggedIn = !!user;
+        }
+
+        function updateNavbar() {
+            const cartLink = document.getElementById('cartLink');
+            const loginLink = document.getElementById('loginLink');
+            const userLoginLink = document.getElementById('userLoginLink');
+            const logoutLink = document.getElementById('logoutLink');
+
+            if (isUserLoggedIn) {
+                cartLink.style.display = 'block';
+                loginLink.style.display = 'none';
+                userLoginLink.style.display = 'none';
+                logoutLink.style.display = 'block';
+            } else {
+                cartLink.style.display = 'none';
+                loginLink.style.display = 'block';
+                userLoginLink.style.display = 'block';
+                logoutLink.style.display = 'none';
+            }
+        }
+
+        function logout() {
+            isUserLoggedIn = false;
+            localStorage.removeItem("loggedInUser");
+            updateNavbar();
+            alert('You have been logged out successfully!');
+        }
+
+        // Smooth scrolling for any anchor links
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function (e) {
+                e.preventDefault();
+                const target = document.querySelector(this.getAttribute('href'));
+                if (target) {
+                    target.scrollIntoView({
+                        behavior: 'smooth'
+                    });
+                }
+            });
+        });
+    </script>
+</body>
+</html>
